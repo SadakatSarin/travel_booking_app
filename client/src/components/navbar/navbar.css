@@ -1,0 +1,42 @@
+.navbar {
+  height: 50px;
+  background-color: #003580; /* Booking.com Blue */
+  display: flex;
+  justify-content: center;
+}
+
+.navContainer {
+  width: 100%;
+  max-width: 1024px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.navButton {
+  margin-left: 20px;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: #003580;
+  background-color: white;
+}
+
+@media (max-width: 640px) {
+  .navContainer {
+    padding: 0px 10px;
+  }
+  .logo {
+    font-size: 16px;
+  }
+  .navButton {
+    padding: 5px;
+    font-size: 12px;
+  }
+}
