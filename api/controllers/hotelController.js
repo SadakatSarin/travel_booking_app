@@ -1,4 +1,5 @@
 import Hotel from "../models/Hotel.js";
+import Room from "../models/Room.js";
 
 // --- CREATE HOTEL ---
 export const createHotel = async (req, res, next) => {
@@ -58,6 +59,20 @@ export const getHotels = async (req, res, next) => {
     }).limit(req.query.limit); // We use the limit here separately
     
     res.status(200).json(hotels);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getHotelRooms = async (req, res, next) => {
+  try {
+    const hotel = await Hotel.findById(req.params.id);
+    const list = await Promise.all(
+      hotel.rooms.map((room) => {
+        return Room.findById(room);
+      })
+    );
+    res.status(200).json(list);
   } catch (err) {
     next(err);
   }

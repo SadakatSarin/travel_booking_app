@@ -3,7 +3,8 @@ import {
   createHotel,
   deleteHotel,
   getHotel,
-  getHotels,
+  getHotelRooms,
+  getHotels, // <--- This is imported correctly
   updateHotel,
 } from "../controllers/hotelController.js";
 import { verifyAdmin } from "../utils/verifyToken.js";
@@ -20,9 +21,14 @@ router.put("/:id", verifyAdmin, updateHotel);
 router.delete("/:id", verifyAdmin, deleteHotel);
 
 // GET SINGLE
-router.get("/:id", getHotel);
+// Note: This matches /api/hotels/123
+router.get("/find/:id", getHotel); 
 
 // GET ALL
-router.get("/", getHotels);
+// Note: This matches /api/hotels?featured=true
+router.get("/", getHotels); // <--- YOU WERE MISSING THIS LINE!
+
+// GET ROOMS
+router.get("/room/:id", getHotelRooms);
 
 export default router;

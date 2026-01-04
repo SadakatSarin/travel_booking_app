@@ -9,11 +9,12 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./header.css";
 import { DateRange } from "react-date-range";
-import { useState } from "react";
+import { useContext, useState } from "react"; // Combined imports
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { SearchContext } from "../../context/SearchContext"; // Ensure path is correct
 
 const Header = ({ type }) => {
   const [destination, setDestination] = useState("");
@@ -34,6 +35,9 @@ const Header = ({ type }) => {
 
   const navigate = useNavigate();
 
+  // FIX: useContext must be INSIDE the component
+  const { dispatch } = useContext(SearchContext);
+
   const handleOption = (name, operation) => {
     setOptions((prev) => {
       return {
@@ -44,12 +48,20 @@ const Header = ({ type }) => {
   };
 
   const handleSearch = () => {
+    // 1. Save state to Global Context
+    dispatch({ type: "NEW_SEARCH", payload: { city: destination, dates: date, options } });
+    
+    // 2. Navigate to results page
     navigate("/hotels", { state: { destination, date, options } });
   };
 
   return (
     <div className="header">
-      <div className={type === "list" ? "headerContainer listMode" : "headerContainer"}>
+      <div
+        className={
+          type === "list" ? "headerContainer listMode" : "headerContainer"
+        }
+      >
         <div className="headerList">
           <div className="headerListItem active">
             <FontAwesomeIcon icon={faBed} />
@@ -74,7 +86,9 @@ const Header = ({ type }) => {
         </div>
         {type !== "list" && (
           <>
-            <h1 className="headerTitle">A lifetime of discounts? It's Genius.</h1>
+            <h1 className="headerTitle">
+              A lifetime of discounts? It's Genius.
+            </h1>
             <p className="headerDesc">
               Get rewarded for your travels – unlock instant savings of 10% or
               more with a free Lamabooking account
@@ -128,7 +142,9 @@ const Header = ({ type }) => {
                         >
                           -
                         </button>
-                        <span className="optionCounterNumber">{options.adult}</span>
+                        <span className="optionCounterNumber">
+                          {options.adult}
+                        </span>
                         <button
                           className="optionCounterButton"
                           onClick={() => handleOption("adult", "i")}
@@ -137,7 +153,48 @@ const Header = ({ type }) => {
                         </button>
                       </div>
                     </div>
-                    {/* Reuse similar structure for children and rooms if needed */}
+                    <div className="optionItem">
+                      <span className="optionText">Children</span>
+                      <div className="optionCounter">
+                        <button
+                          disabled={options.children <= 0}
+                          className="optionCounterButton"
+                          onClick={() => handleOption("children", "d")}
+                        >
+                          -
+                        </button>
+                        <span className="optionCounterNumber">
+                          {options.children}
+                        </span>
+                        <button
+                          className="optionCounterButton"
+                          onClick={() => handleOption("children", "i")}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    <div className="optionItem">
+                      <span className="optionText">Room</span>
+                      <div className="optionCounter">
+                        <button
+                          disabled={options.room <= 1}
+                          className="optionCounterButton"
+                          onClick={() => handleOption("room", "d")}
+                        >
+                          -
+                        </button>
+                        <span className="optionCounterNumber">
+                          {options.room}
+                        </span>
+                        <button
+                          className="optionCounterButton"
+                          onClick={() => handleOption("room", "i")}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

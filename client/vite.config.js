@@ -6,9 +6,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:8800',
+      "/api": {
+        target: "http://localhost:8800", // Make sure your backend runs on 8800
         changeOrigin: true,
+        secure: false,
       },
     },
   },
